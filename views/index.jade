@@ -1,18 +1,23 @@
 extends layout
 block styles
   link(rel='stylesheet', href='/stylesheets/board.css')
+  link(rel='stylesheet', href='/stylesheets/footable.core.css')
+  link(rel='stylesheet', href='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css')
+
 block header
     .heading
         h1.mainheading
-          | Backbone Bulletin Board
+          | Backbone Bookmark Port
         h2.subheader
           | Backbone.js demo with authentication
 block content
     #app
       br
       .form-box
-        if (typeof username!="undefined") 
+        if (typeof username!="undefined")
             input#new-post-title(type="text", placeholder="Title")
+            br
+            input#new-post-category(type="text", placeholder="Category")
             br
             textarea#new-post-body(type="text", placeholder="Body")
             button.submit(href="javascript:null;")
@@ -25,31 +30,30 @@ block content
         br
       section#main
         div#list
-      a(href='https://github.com/jeffj/backbone-bulletin-board')
-          img(style='position: absolute; top: 0; right: 0; border: 0;', src='https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png', alt='Fork me on GitHub')
 
 block bodyscripts
   script
     | username="#{username}"
+  include tabletest.html
   script#item-template(type="text/template")
-    |<div class="view">
-    | <div class="border"></div>
-    |  <div class="control-box">
+    |  <td><%= title %><input class="title-edit" placeholder"Title"></input></td>    
+    |  <td><%= category %><input class="category-edit" placeholder"Category"></td>
+    |  <td><%= body %><textarea class="body-edit" placeholder"Body"></textarea></td>
     |  <% if (myPost == true) { %>
-    |  <a class="edit" href="javascript:null;" class="destroy">&#9998;</a>
-    |  <a class="destroy" href="javascript:null;" class="destroy">&#10006;</a>
-    |  <% } %> 
-    |  </div> 
-    |  <h3 class="title" ><%= title %></h3>
-    |  <div class="body" ><%= body %></div>
-    |  <input class="title-edit" placeholder"Title"></input>
-    |  <br>
-    |  <textarea class="body-edit" placeholder"Body"></textarea>
-    |  <div class="bottom-label">
+    |  <td><a class="edit" href="#" class="destroy">&#9998;</a><button href="javascript:null;"class="submit-update">Update</button></td>
+    |  <td><a class="destroy" href="#" class="destroy">&#10006;</a></td>
+    |  <% } %>
     |  <span class="username" >- <%= user.username %></span>
     |  <span class="timestamp" >| <%= timeAgo %></span>
-    |  </div>
-    |  <button href="javascript:null;"class="submit-update">Update</button>  
-    |</div>
+  include test2.html
+  script(type="text/javascript", src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js")
   script(type="text/javascript", src="javascripts/board.js")
+  script(type="text/javascript", src="javascripts/vendor/footable.js")
+  script(type="text/javascript", src="javascripts/vendor/footable.sort.js")
+  script(type="text/javascript", src="javascripts/vendor/footable.paginate.js")
+  script(type="text/javascript", src="javascripts/vendor/footable.filter.js")
+  include function.html
 block footer
+
+
+

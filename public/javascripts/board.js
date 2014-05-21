@@ -17,6 +17,7 @@ $(function ($, _, Backbone) {
     defaults: function () {
       return {
         title: "empty post..."
+        , category: "Uncategorized"
         , done: false
       };
     },
@@ -58,7 +59,7 @@ $(function ($, _, Backbone) {
   PostView = Backbone.View.extend({
 
     //... is a list tag.
-    tagName:  "li",
+    tagName:  "tr",
 
     // Cache the template function for a single item.
     template: _.template($('#item-template').html()),
@@ -87,6 +88,7 @@ $(function ($, _, Backbone) {
       this.input = this.$('.edit');
       this.bodyEdit = this.$(".body-edit")
       this.titleEdit = this.$(".title-edit")
+      this.categoryEdit = this.$(".category-edit")
       return this;
     },
 
@@ -97,9 +99,10 @@ $(function ($, _, Backbone) {
     // If you hit `enter`, we're through editing the item.
     update: function (e) {
         var valuebody = this.bodyEdit.val().trim(),
+            valuecategory = this.categoryEdit.val().trim(),
             valuetitle = this.titleEdit.val().trim();
-        if(valuetitle || valuebody) {
-          this.model.save({title: valuetitle, body:valuebody});
+        if(valuetitle || valuebody || valuecategory) {
+          this.model.save({title: valuetitle, body: valuebody, category: valuecategory});
         }
         this.$el.removeClass('editing');
       // if (e.keyCode === 13) {
@@ -114,6 +117,7 @@ $(function ($, _, Backbone) {
       this.$el.addClass("editing")
       this.titleEdit.val(this.model.get("title"));
       this.bodyEdit.val(this.model.get("body"))
+      this.categoryEdit.val(this.model.get("category"))
     },
 
   });
@@ -144,6 +148,7 @@ $(function ($, _, Backbone) {
     initialize: function () {
       this.inputTitle = this.$("#new-post-title");
       this.inputBody = this.$("#new-post-body");
+      this.inputCategory = this.$("#new-post-category");
       Posts.bind('add', this.addOne, this);
       Posts.bind('reset', this.addAll, this);
       Posts.bind('all', this.render, this);
@@ -168,7 +173,7 @@ $(function ($, _, Backbone) {
     // appending its element to the `<ul>`.
     addOne: function (post) {
       var view = new PostView({model: post});
-      $("#list").prepend(view.render().el);
+      $("#footable").prepend(view.render().el);
     },
 
     // Add all items in the **Posts** collection at once.
@@ -183,9 +188,10 @@ $(function ($, _, Backbone) {
       create();
     },
     create:function(){
-      Posts.create({createdAt:new Date(), title: this.inputTitle.val(),body: this.inputBody.val(), myPost:true, user: {username:"jeffj"}});
+      Posts.create({createdAt:new Date(), title: this.inputTitle.val(),body: this.inputBody.val(), category: this.inputCategory.val(), myPost:true, user: {username:"jeffj"}});
       this.inputTitle.val('');
       this.inputBody.val('');
+      this.inputCategory.val('');
     }
     // toggleAllComplete: function () {
     //   var done = this.allCheckbox.checked;

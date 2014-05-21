@@ -22,7 +22,7 @@
         .exec(function (err, result) {
         if (!err) {
           var json;
-          json=parseResults(result, req.user); //adds a myPost key for the post the user ownes
+          json=parseResults(result, req.user); //adds a myPost key for the post the user owns
           res.send(json);
         } else {
           res.send(errMsg(err));
@@ -53,6 +53,7 @@
       var m = new model(
         { body: req.body.body,
           title: req.body.title,
+          category: req.body.category,
           createdAt: req.body.createdAt,
           user : req.user._id
         });

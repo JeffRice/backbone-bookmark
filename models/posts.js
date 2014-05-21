@@ -2,7 +2,8 @@ var mongoose = require('mongoose')
     Schema = mongoose.Schema;
    postsSchema = new mongoose.Schema({
         title: { 'type': String, 'default': 'empty title...' }
-       , body: { 'type': String, 'default': 'empty post...' }
+       , body: { 'type': String, 'default': 'Web Address' }
+       , category: { 'type': String, 'default': 'Uncategorized' }
        , createdAt : {type : Date, default : Date.now}
        , user  : { type : Schema.ObjectId, ref : 'User' } 
   });
