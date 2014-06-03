@@ -2,24 +2,25 @@ extends layout
 block styles
   link(rel='stylesheet', href='/stylesheets/board.css')
   link(rel='stylesheet', href='/stylesheets/footable.core.css')
+  link(rel='stylesheet', href='/stylesheets/footable.metro.css')
   link(rel='stylesheet', href='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css')
 
 block header
     .heading
-        h1.mainheading
-          | Backbone Bookmark Port
-        h2.subheader
+        h2.subheading
           | Backbone.js demo with authentication
 block content
     #app
       br
       .form-box
         if (typeof username!="undefined")
+            h3 Create New Bookmark
             input#new-post-title(type="text", placeholder="Title")
             br
             input#new-post-category(type="text", placeholder="Category")
             br
-            textarea#new-post-body(type="text", placeholder="Body")
+            Enter Address after "http://" 
+            textarea#new-post-body(type="text", placeholder="Address")
             button.submit(href="javascript:null;")
               | Submit
         else
@@ -36,24 +37,39 @@ block bodyscripts
     | username="#{username}"
   include tabletest.html
   script#item-template(type="text/template")
-    |  <td><%= title %><input class="title-edit" placeholder"Title"></input></td>    
-    |  <td><%= category %><input class="category-edit" placeholder"Category"></td>
-    |  <td><%= body %><textarea class="body-edit" placeholder"Body"></textarea></td>
+    |  <td><%= title.substr(0,15) %><br /><input class="title-edit" placeholder"Title"></input></td>
+    |  <td><%= category.substr(0,15) %><br /><input class="category-edit" placeholder"Category"></td>
+    |  <td><a href="http://<%= body %>"><%= body.substr(0,10) %></a><br /><textarea class="body-edit" placeholder"Address"></textarea></td>
+    |  <td data-value="<%= createdAt %>"><%= timeAgo %></td>
+    |  <td><span class="username" >- <%= user.username %></span></td>
     |  <% if (myPost == true) { %>
-    |  <td><a class="edit" href="#" class="destroy">&#9998;</a><button href="javascript:null;"class="submit-update">Update</button></td>
-    |  <td><a class="destroy" href="#" class="destroy">&#10006;</a></td>
+    |  <td><a class="edit" class="destroy">edit</a> &nbsp;&nbsp;<a class="destroy" href="#" class="destroy">&#10006;</a>
+    |  <br /><button href="javascript:null;"class="submit-update">Update</button></td>
     |  <% } %>
-    |  <span class="username" >- <%= user.username %></span>
-    |  <span class="timestamp" >| <%= timeAgo %></span>
+    |  <% if (myPost == false) { %>
+    |  <td>Can't Edit</td>
+    |  <% } %>
+  include test.html
+  include tabletest2.html
+  script#item-template2(type="text/template")
+    |  <% if (myPost == true) { %>
+    |  <td><%= title %><br /><input class="title-edit" placeholder"Title"></input></td>
+    |  <td><%= category.substr(0,12) %><br /><input class="category-edit" placeholder"Category"></td>
+    |  <td><a href="http://<%= body %>"><%= body.substr(0,10) %></a><br /><textarea class="body-edit" placeholder"Body"></textarea></td>
+    |  <td data-value="<%= createdAt %>"><%= timeAgo %></td>
+    |  <td><span class="username" >- <%= user.username %></span></td>
+    |  <td><a class="edit" class="destroy">edit</a> &nbsp;&nbsp;<a class="destroy" href="#" class="destroy">&#10006;</a>
+    |  <br /><button href="javascript:null;"class="submit-update">Update</button></td>
+    |  <% } %>
+    |  <% if (myPost == false) { %>
+    |  <% } %>
   include test2.html
-  script(type="text/javascript", src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js")
   script(type="text/javascript", src="javascripts/board.js")
   script(type="text/javascript", src="javascripts/vendor/footable.js")
   script(type="text/javascript", src="javascripts/vendor/footable.sort.js")
   script(type="text/javascript", src="javascripts/vendor/footable.paginate.js")
   script(type="text/javascript", src="javascripts/vendor/footable.filter.js")
+  script(type="text/javascript", src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js")
+  script(type="text/javascript", src="javascripts/vendor/footable.paginate.js")
   include function.html
 block footer
-
-
-

@@ -10,7 +10,7 @@
 		previousText: '&lsaquo;',
 		nextText: '&rsaquo;',
 		lastText: '&raquo;',
-		limitNavigation: 0,
+		limitNavigation: 10,
 		limitPreviousText: '...',
 		limitNextText: '...'
 	};

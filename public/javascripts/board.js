@@ -2,7 +2,7 @@ $(function ($, _, Backbone) {
 
   "use strict";
 
-  var Post, PostList, Posts, PostView, AppView, App;
+  var Post, PostList, Posts, PostView, AppView, App, PostView2;
 
   // Post Model
   // ----------
@@ -17,7 +17,6 @@ $(function ($, _, Backbone) {
     defaults: function () {
       return {
         title: "empty post..."
-        , category: "Uncategorized"
         , done: false
       };
     },
@@ -28,6 +27,7 @@ $(function ($, _, Backbone) {
         this.set({"title": this.defaults.title});
       }
     },
+
     // timeago:function(){
     // },
     // Remove this post and delete its view.
@@ -39,18 +39,24 @@ $(function ($, _, Backbone) {
   // Posts Collection
   // ---------------
 
-  PostList = Backbone.Collection.extend({
-
+PostList = Backbone.Collection.extend({
     // Reference to this collection's model.
-    model: Post,
+  model: Post,
     // Note that url may also be defined as a function.
     url: function () {
-      return "/post" + ((this.id) ? '/' + this.id : '');
+
+     return "/post" + ((this.id) ? '/' + this.id : '');
     },
+
   });
 
+
   // Create our global collection of **Post**.
-  Posts = new PostList();
+
+
+ Posts = new PostList();
+  
+
 
   // Post Item View
   // --------------
@@ -122,6 +128,79 @@ $(function ($, _, Backbone) {
 
   });
 
+
+
+  // Post Item View
+  // --------------
+
+  // The DOM element for a post item...
+  PostView2 = Backbone.View.extend({
+
+    //... is a list tag.
+    tagName:  "tr",
+
+    // Cache the template function for a single item.
+    template: _.template($('#item-template2').html()),
+
+    // The DOM events specific to an item.
+    events: {
+       "click .toggle"   : "toggleDone",
+       "click .edit"  : "edit",
+       "click a.destroy" : "clear",
+        "click .submit-update"  : "update",
+    },
+
+    // The View listens for changes to its model, re-rendering. Since there's
+    // a one-to-one correspondence between a **Post** and a **PostView** in this
+    // app, we set a direct reference on the model for convenience.
+    initialize: function () {
+      this.model.bind('change', this.render, this);
+      this.model.bind('destroy', this.remove, this);
+    },
+
+    // Re-render the titles of the post item.
+    render: function () {
+      var JSON=this.model.toJSON()
+      JSON.timeAgo=$.timeago(this.model.get("createdAt"))
+      this.$el.html(this.template(JSON));
+      this.input = this.$('.edit');
+      this.bodyEdit = this.$(".body-edit")
+      this.titleEdit = this.$(".title-edit")
+      this.categoryEdit = this.$(".category-edit")
+      return this;
+    },
+
+    // Toggle the `"done"` state of the model.
+    toggleDone: function () {
+      this.model.toggle();
+    },
+    // If you hit `enter`, we're through editing the item.
+    update: function (e) {
+        var valuebody = this.bodyEdit.val().trim(),
+            valuecategory = this.categoryEdit.val().trim(),
+            valuetitle = this.titleEdit.val().trim();
+        if(valuetitle || valuebody || valuecategory) {
+          this.model.save({title: valuetitle, body: valuebody, category: valuecategory});
+        }
+        this.$el.removeClass('editing');
+      // if (e.keyCode === 13) {
+      //   this.close();
+      // }
+    },
+    // Remove the item, destroy the model.
+    clear: function () {
+      this.model.clear();
+    },
+    edit:function () {
+      this.$el.addClass("editing")
+      this.titleEdit.val(this.model.get("title"));
+      this.bodyEdit.val(this.model.get("body"))
+      this.categoryEdit.val(this.model.get("category"))
+    },
+
+  });
+
+
   // The Application
   // ---------------
 
@@ -154,6 +233,7 @@ $(function ($, _, Backbone) {
       Posts.bind('all', this.render, this);
       //this.footer = this.$('footer');
       this.main = $('#main');
+      
 
       Posts.fetch();
     },
@@ -174,6 +254,9 @@ $(function ($, _, Backbone) {
     addOne: function (post) {
       var view = new PostView({model: post});
       $("#footable").prepend(view.render().el);
+      var view2 = new PostView2({model: post});
+      $("#footable2").prepend(view2.render().el);
+
     },
 
     // Add all items in the **Posts** collection at once.
@@ -199,8 +282,8 @@ $(function ($, _, Backbone) {
     // }
 
   });
-
   // Finally, we kick things off by creating the **App**.
   App = new AppView();
 
 }(jQuery, _, Backbone));
+

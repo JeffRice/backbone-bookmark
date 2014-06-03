@@ -17,9 +17,9 @@
       model
         .find({})
         .populate("user", "username")
-        .sort("createdAt")
+        .sort("createdAt")        
         .lean()
-        .exec(function (err, result) {
+         .exec(function (err, result) {
         if (!err) {
           var json;
           json=parseResults(result, req.user); //adds a myPost key for the post the user owns
@@ -32,7 +32,7 @@
   }
 
   function parseResults(result, user){ //Check if the logged in user is the author.
-  var id 
+  var id
   if (user) id=user._id; //setting the id if it exists;
    for (var i = result.length - 1; i >= 0; i--) { //check if the id matches the user.
       if (!result[i].user)
@@ -44,6 +44,10 @@
     };
     return result
   }
+
+
+
+
   //------------------------------
   // Create
   //
@@ -74,7 +78,7 @@
   //------------------------------
   // Read
   //
-  function getReadController(model) {
+  function getReadController(model, user) {
     return function (req, res) {
       model.findById(req.params.id, function (err, result) {
         if (!err) {
@@ -85,6 +89,7 @@
       });
     };
   }
+
 
   //------------------------------
   // Update
@@ -126,9 +131,10 @@
   function postid(req, res, next, id){  //param function for wildcard :id of url
     var mongoose = require('mongoose'),
     Post = mongoose.model('Post');
-    Post.load(id, function (err, post) {
+    Post.load(id, function (err, post) {      
       if (err) return next(err)
       if (!post) return next(new Error('Failed to load article ' + id))
+      
       req.post = post
       next()
     })

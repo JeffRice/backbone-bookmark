@@ -4,7 +4,7 @@ var mongoose = require('mongoose')
         title: { 'type': String, 'default': 'empty title...' }
        , body: { 'type': String, 'default': 'Web Address' }
        , category: { 'type': String, 'default': 'Uncategorized' }
-       , createdAt : {type : Date, default : Date.now}
+       , createdAt : {type : Date, default : Date.now()}
        , user  : { type : Schema.ObjectId, ref : 'User' } 
   });
 

@@ -71,19 +71,21 @@ footer .top-right {
   margin: 20px auto;
   font-family: Helvetica Neue;
   color: #333;
-  width: 800px;
-  text-align: center;
 }
+text-align center,
 .form-box {
   margin: auto;
   width: 300px;
 }
+text-align center input,
 .form-box input {
   width: 100%;
 }
+text-align center textarea,
 .form-box textarea {
   width: 100%;
 }
+text-align center .submit,
 .form-box .submit {
   float: right;
 }
